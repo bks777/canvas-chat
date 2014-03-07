@@ -1,0 +1,22 @@
+body, h1, h2 {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+body {
+    background-color: #999999;
+}
+
+body > h1 {
+    margin-top: 5%;
+}
+
+#table {
+    display: table;
+    outline:none;
+    margin: 10% auto;
+}
+#game-canvas {
+    background-color: #ffffff;
+}

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
+    <file url="file://$PROJECT_DIR$/img/chat_container.png" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/img/scrollArrows.png" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lib/caat-0.6-51.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/lib/jquery-1.11.0.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/scripts/Chat.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/scripts/Input.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/scripts/Scroll.js" charset="UTF-8" />
+  </component>
+</project>
+
