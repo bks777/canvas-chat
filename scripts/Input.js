@@ -10,7 +10,7 @@ var Input = (function () {
         this.parent = parent;
         _CanvasEditor = this;
         this.inputTextContainer = new CAAT.ActorContainer()
-            .setSize(images['chatBackgroundImage'].singleWidth - (json.chatMargin.leftMargin + json.chatMargin.rightMargin), json.input.size.height)
+            .setSize(images['chatBackgroundImage'].singleWidth - (json.chatMargin.leftMargin + json.chatMargin.rightMargin), json.input.size.height);
             //.setLocation(json.input.cursor.startPosition, 0);
         scene.addChild(this.inputTextContainer);
         var input = new CAAT.Actor();
@@ -81,7 +81,7 @@ var Input = (function () {
         var curW=0;
         var cursorX=-1;
 
-        for(i=idxFirst;i<text.length;i++){
+        for(var i=idxFirst;i<text.length;i++){
             curW += ctx.measureText(text.substr(i,1)).width;
 
             if(i+1 == idxCursor){
@@ -319,8 +319,7 @@ var Input = (function () {
      */
     init.prototype.btnEnter = function () {
         if (text !== '') {
-
-           text = json.chatLabel.default.startText + text + json.chatLabel.endText;
+            text = json.chatLabel.default.startText + text + json.chatLabel.endText;
             chat.chatLabel.setVisible(false);
             chat.chatLabel.setText(text, json.chatLabel.linesWidth);
             chat.textAdd();

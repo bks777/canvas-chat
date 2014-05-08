@@ -72,5 +72,6 @@ var json = {
     },
     scrollBtnDown: {
         height : 16
-    }
+    },
+    isDebug : true
 };

@@ -5,14 +5,13 @@
 
 
 var images = [];
-
 var scene;
 var chat;
 function initialize (callback){
+CAAT.DEBUG = json.isDebug;
 var director = new CAAT.Director().initialize
     ( 293, 183, $('#game-canvas')[0] );
 director.loop();
-
 director.enableResizeEvents(CAAT.Director.prototype.RESIZE_PROPORTIONAL);
 director.setSoundEffectsEnabled(true);
 director.setClear(true);
@@ -30,7 +29,6 @@ new CAAT.ImagePreloader().loadImages([
             callback();
         }
     }
-
 });
 
 scene = director.createScene();

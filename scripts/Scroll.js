@@ -55,6 +55,7 @@ var Scroll = (function(){
                 (function () {
                     if(this.scaleInterval)this.labelScrollHandler.y -= this.scaleInterval;
                     this.checkScrollHandlerPosition(this);
+                    chat.lineUp();
                 }).bind(this)
             )
             .setSize(json.scrollWidth, json.scrollBtnUp.height)
@@ -65,6 +66,7 @@ var Scroll = (function(){
                 (function () {
                     if(this.scaleInterval)this.labelScrollHandler.y += this.scaleInterval;
                     this.checkScrollHandlerPosition(this);
+                    chat.lineDown();
                 }).bind(this)
             )
             .setSize(json.scrollWidth, json.scrollBtnDown.height);
