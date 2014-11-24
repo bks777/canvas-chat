@@ -1,6 +1,5 @@
 var Scroll = (function(){
     function init(container, callUp, callDown){
-        this.startY;
         this.labelScrollY = 0;
         this.sY = 0;
         this.scrHeight = 0;
@@ -16,7 +15,6 @@ var Scroll = (function(){
 
         /**
          * Scroll drag event
-         * @type {*}
          */
         this.labelScrollHandler.mouseDrag = (function(mouseEvent){
             this.rollingWidth = this.startY - mouseEvent.y;

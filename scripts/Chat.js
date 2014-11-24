@@ -1,7 +1,38 @@
+/**
+ * @description Main class with label (background for text)
+ * @class Chat
+ * @name Chat
+ * @author Konstantin Bokov
+ */
 var Chat = (function () {
-    function init(scene, parent) {
-    	
-        this.parent = parent;
+    function init(scene) {
+
+
+        /**
+         * Main container initialization
+         */
+        this.chatContainer = new CAAT.ActorContainer()
+            .setSize(images['chatBackgroundImage'].singleWidth, images['chatBackgroundImage'].singleHeight)
+            .setLocation(json.chatlocation.x, json.chatlocation.y)
+            .setVisible(true);
+        scene.addChild(this.chatContainer);
+
+        /**
+         * inner variables
+         */
+        var chatBackground = new CAAT.Actor().setBackgroundImage(images['chatBackgroundImage'].getRef(), true),
+         activeWidth = images['chatBackgroundImage'].singleWidth  - (json.chatMargin.leftMargin + json.chatMargin.rightMargin),
+         activeHeight = images['chatBackgroundImage'].singleHeight - (json.chatMargin.topMargin + json.chatMargin.bottomMargin),
+         chatTextContainer = new CAAT.ActorContainer()
+            .setSize(activeWidth, activeHeight - json.input.size.height)
+            .setLocation(json.chatLabel.location.x, json.chatLabel.location.y),
+         $canvas = $('#game-canvas');
+
+
+        /**
+         * scope variables
+         */
+        this.parent = scene;
         this.selected = false;
         this.mouseOnLabel = false;
         this.curLine = 0;
@@ -9,29 +40,15 @@ var Chat = (function () {
         this.docHeight = 0;
         this.nonActiveLines = 0;
         this.trickLinesCounter = 0;
-        this.chatContainer = new CAAT.ActorContainer()
-            .setSize(images['chatBackgroundImage'].singleWidth, images['chatBackgroundImage'].singleHeight)
-            .setLocation(json.chatlocation.x, json.chatlocation.y)
-            .setVisible(true);
-        scene.addChild(this.chatContainer);
-
-        var chatBackground = new CAAT.Actor().setBackgroundImage(images['chatBackgroundImage'].getRef(), true);
-        this.chatContainer.addChild(chatBackground);
-        var activeWidth = images['chatBackgroundImage'].singleWidth  - (json.chatMargin.leftMargin + json.chatMargin.rightMargin);
-        var activeHeight = images['chatBackgroundImage'].singleHeight - (json.chatMargin.topMargin + json.chatMargin.bottomMargin);
         this.inputWidth = activeWidth;
         this.labelHeight = activeHeight - json.input.size.height;
         this.scrHeightMaxHeight = activeHeight - json.input.size.height - json.scrollBtnUp.height - json.scrollBtnDown.height;
-
-        var chatTextContainer = new CAAT.ActorContainer()
-            .setSize(activeWidth, activeHeight - json.input.size.height)
-            .setLocation(json.chatLabel.location.x, json.chatLabel.location.y);
         this.inputContainer = new CAAT.ActorContainer()
             .setSize(activeWidth, json.input.size.height)
             .setLocation(json.input.location.x, images['chatBackgroundImage'].singleHeight - json.input.size.height - json.chatMargin.bottomMargin);
 
-        this.chatContainer.addChild(chatTextContainer);
-        this.chatContainer.addChild(this.inputContainer);
+
+        //Main label
         this.chatLabel = new CAAT.UI.Label()
             .setSize(activeWidth, activeHeight - json.input.size.height)
             .setStyle("default", {
@@ -58,12 +75,22 @@ var Chat = (function () {
                 bold: true
             });
 
+        //working child for label object
         this.labelContainer = new Input(this.inputContainer, this);
         if (this.labelContainer.keydownHandler !== undefined){
             $('#table').bind('keydown', this.labelContainer.keydownHandler);
             $('#table').bind('keypress', this.labelContainer.keyboardPressHandler);
             $('#table').bind('keyup', this.labelContainer.keyboardDownHandler);
         }
+
+        /**
+         * init of inner stuff
+         */
+        this.chatContainer.addChild(chatBackground);
+        this.chatContainer.addChild(chatTextContainer);
+        this.chatContainer.addChild(this.inputContainer);
+        chatTextContainer.addChild(this.chatLabel);
+
         /**
          * Mouse wheel event
          * @type {*|jQuery|HTMLElement}
@@ -97,12 +124,10 @@ var Chat = (function () {
                 }
         }
         }.bind(this);
-
-        var $canvas = $('#game-canvas');
         $canvas.bind('mousewheel', mouseWheel);
         $canvas.bind('DOMMouseScroll', mouseWheel);
 
-        chatTextContainer.addChild(this.chatLabel);
+
         this.chatLabel.mouseEnter = (function(){
             this.mouseOnLabel = true;
         }).bind(this);
@@ -117,19 +142,27 @@ var Chat = (function () {
         this.scroll.SetPosition(activeWidth, activeHeight, json.scrollWidth, json.input.size.height, this.scrHeightMaxHeight);
 
     }
+
+    /**
+     * adding text @TODO investigate
+     * @param trick
+     */
     init.prototype.textAdd = function (trick){
         var newlines  = this.chatLabel.lines;
         if (trick) {
-            if (this.trickLinesCounter !== 0) this.deleteLastTrick(json.trickTitle);
+            if (this.trickLinesCounter !== 0) this.deleteLastTrick(json.trickTitle); //wtf???
             this.trickLinesCounter = this.chatLabel.lines.length;
         }
         for (var i=0; i<newlines.length; i++){
             this.textMass.push(newlines[i]);
-            trick ? log('now text height' + this.docHeight) : this.docHeight += newlines[i].height;
+            trick ? console.log('now text height' + this.docHeight) : this.docHeight += newlines[i].height;
         }
         newlines.length = 0;
     };
 
+    /**
+     * Re-draw
+     */
     init.prototype.redrawText = function () {
         var h = 0;
         var i = this.curLine;
@@ -148,7 +181,7 @@ var Chat = (function () {
         this.chatLabel.lines = setLinesY(currentArray);
         this.scroll.setScroll(this.labelHeight, this.docHeight, this.scrHeightMaxHeight);
     };
-
+//@TODO move it out
     function setLinesY (arr){
         arr[0].y = 0;
         for (var i = 0; i < arr.length - 1; i++){
@@ -156,8 +189,6 @@ var Chat = (function () {
         }
         return arr;
     }
-
-
 
     init.prototype.setLines = function () {
         var linesLength = this.textMass.length;

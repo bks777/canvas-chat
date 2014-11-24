@@ -9,24 +9,23 @@ var Input = (function () {
     function init(scene, parent) {
         this.parent = parent;
         _CanvasEditor = this;
+        //Initialization
         this.inputTextContainer = new CAAT.ActorContainer()
             .setSize(images['chatBackgroundImage'].singleWidth - (json.chatMargin.leftMargin + json.chatMargin.rightMargin), json.input.size.height);
-            //.setLocation(json.input.cursor.startPosition, 0);
         scene.addChild(this.inputTextContainer);
+
         var input = new CAAT.Actor();
         this.inputTextContainer.addChild(input);
+
+        //Configuration
         input.ctx = CAAT.director[0].ctx;
         input.ctx.font = json.input.font;
-        /**
-         * Cursor object
-         */
+
+        //Cursor
         this.cursor = new CAAT.Actor();
-           // .setBounds(0, 0, input.width, input.height)
-           // .enableEvents(false);
         this.inputTextContainer.addChild(this.cursor);
-        /**
-         * Graphical cursor position.
-         */
+
+        //Position of cursor
         var cursorPosition = {
             x: json.input.cursor.startPosition,
             y: 0
@@ -40,13 +39,12 @@ var Input = (function () {
             var ctx = input.ctx;
             // build a color
             var color = json.input.cursor.color;
-
+            //Color blinking @TODO make it transparent, not 'background color'
             if (time % 1000 > 500) {
                 color = json.input.cursor.backgroundColor;
             } else {
                 color = json.input.cursor.color;
             }
-
             if (this.parent.selected != true){
                 ctx.globalAlpha = 0;
             } else {
@@ -54,10 +52,13 @@ var Input = (function () {
             }
             ctx.fillStyle = color;
             ctx.beginPath();
-            ctx.rect(Math.round(this.cx), cursorPosition.y + json.input.cursor.verticalPadding, json.input.cursor.verticalPadding, json.input.size.height - (json.input.cursor.verticalPadding*2));
-
+            ctx.rect(Math.round(this.cx),
+                cursorPosition.y + json.input.cursor.verticalPadding,
+                json.input.cursor.verticalPadding,
+                json.input.size.height - (json.input.cursor.verticalPadding*2));
             ctx.fill();
         };
+        //Overwritting of paint method @TODO bad practice ?
         input.paint = function (director, time) {
             var ctx = input.ctx;
             var curTxt = text.substr(idxFirst,  idxLast - idxFirst + 1);
@@ -67,8 +68,6 @@ var Input = (function () {
 
         this.clickArea =  new CAAT.Actor()
             .setSize(this.inputTextContainer.width, this.inputTextContainer.height);
-
-
         this.inputTextContainer.addChild(this.clickArea);
         this.clickArea.mouseClick = function () {
             $('#table').focus();
@@ -77,24 +76,24 @@ var Input = (function () {
     }
 
     init.prototype.recalcIndexes = function(){
-        var ctx=CAAT.director[0].ctx;
-        var curW=0;
-        var cursorX=-1;
+        var ctx = CAAT.director[0].ctx;
+        var curW = 0;
+        var cursorX = -1;
 
         for(var i=idxFirst;i<text.length;i++){
             curW += ctx.measureText(text.substr(i,1)).width;
 
-            if(i+1 == idxCursor){
+            if( i + 1 == idxCursor ){
                 cursorX = curW;
             }
 
-            if(curW > this.inputTextContainer.width){break;}
+            if(curW > this.inputTextContainer.width)break;
         }
-        if(idxCursor == idxFirst){this.cursor.cx=0;}else
-        if(cursorX == -1){
-            this.cursor.cx = curW -ctx.measureText(text.substr(i,1)).width;
-        }else{this.cursor.cx = cursorX;}
-        idxLast=i-1;
+        if(idxCursor == idxFirst) this.cursor.cx = 0;
+        else if(cursorX == -1)
+            this.cursor.cx = curW - ctx.measureText(text.substr(i,1)).width;
+        else this.cursor.cx = cursorX;
+        idxLast = i - 1;
     };
 
     /**
@@ -141,10 +140,6 @@ var Input = (function () {
         }
     };
     init.prototype.keyboardPressHandler = function (evt) {
-
-        /*if ( this.parent.selected != true){
-            return;
-        }*/
         // technical button pressed like arrow
         if (evt.charCode === 0) {
             evt.preventDefault();
@@ -163,10 +158,6 @@ var Input = (function () {
 
     };
     init.prototype.keyboardDownHandler = function (evt) {
-
-        /*if ( this.parent.selected != true){
-            return;
-        }*/
         switch (evt.keyCode) {
             //enter button
             case 13:
@@ -199,6 +190,7 @@ var Input = (function () {
         }
 
     };
+
     /**
      * Set cursor to new textual position
      */
@@ -225,6 +217,7 @@ var Input = (function () {
         idxCursor = newPos;
         this.recalcIndexes();
     };
+
     /**
      * Action of [home] button at current position
      */

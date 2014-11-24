@@ -35,5 +35,5 @@ scene = director.createScene();
 }
 
 initialize(function initChat(){
-    chat = new Chat(scene, scene);
+    chat = new Chat(scene);
 });
